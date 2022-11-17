@@ -105,9 +105,6 @@
             this.button1 = new System.Windows.Forms.Button();
             this.btn_OUTPUT0 = new System.Windows.Forms.Button();
             this.button8 = new System.Windows.Forms.Button();
-            this.tableLayoutPanel26 = new System.Windows.Forms.TableLayoutPanel();
-            this.label19 = new System.Windows.Forms.Label();
-            this.label10 = new System.Windows.Forms.Label();
             this.btn_INPUT15 = new System.Windows.Forms.Button();
             this.btn_INPUT14 = new System.Windows.Forms.Button();
             this.btn_INPUT13 = new System.Windows.Forms.Button();
@@ -183,7 +180,6 @@
             this.tableLayoutPanel23.SuspendLayout();
             this.tableLayoutPanel24.SuspendLayout();
             this.tableLayoutPanel25.SuspendLayout();
-            this.tableLayoutPanel26.SuspendLayout();
             this.Tab_Log.SuspendLayout();
             this.Main_TabControl.SuspendLayout();
             this.Tab_Home.SuspendLayout();
@@ -785,7 +781,6 @@
             this.tableLayoutPanel3.Controls.Add(this.tableLayoutPanel23, 1, 4);
             this.tableLayoutPanel3.Controls.Add(this.tableLayoutPanel24, 1, 3);
             this.tableLayoutPanel3.Controls.Add(this.tableLayoutPanel25, 1, 2);
-            this.tableLayoutPanel3.Controls.Add(this.tableLayoutPanel26, 1, 1);
             this.tableLayoutPanel3.Controls.Add(this.btn_INPUT15, 0, 8);
             this.tableLayoutPanel3.Controls.Add(this.btn_INPUT14, 0, 7);
             this.tableLayoutPanel3.Controls.Add(this.btn_INPUT13, 0, 6);
@@ -1315,46 +1310,6 @@
             this.button8.Text = "8 ON";
             this.button8.UseVisualStyleBackColor = true;
             this.button8.Click += new System.EventHandler(this.OUTPUT_Click);
-            // 
-            // tableLayoutPanel26
-            // 
-            this.tableLayoutPanel26.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
-            this.tableLayoutPanel26.ColumnCount = 2;
-            this.tableLayoutPanel26.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel26.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel26.Controls.Add(this.label19, 1, 0);
-            this.tableLayoutPanel26.Controls.Add(this.label10, 0, 0);
-            this.tableLayoutPanel26.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel26.Location = new System.Drawing.Point(956, 104);
-            this.tableLayoutPanel26.Name = "tableLayoutPanel26";
-            this.tableLayoutPanel26.RowCount = 1;
-            this.tableLayoutPanel26.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel26.Size = new System.Drawing.Size(947, 95);
-            this.tableLayoutPanel26.TabIndex = 36;
-            // 
-            // label19
-            // 
-            this.label19.AutoSize = true;
-            this.label19.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label19.Font = new System.Drawing.Font("맑은 고딕", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.label19.Location = new System.Drawing.Point(477, 1);
-            this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(466, 93);
-            this.label19.TabIndex = 1;
-            this.label19.Text = "LINE #2";
-            this.label19.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label10.Font = new System.Drawing.Font("맑은 고딕", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.label10.Location = new System.Drawing.Point(4, 1);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(466, 93);
-            this.label10.TabIndex = 0;
-            this.label10.Text = "LINE #1";
-            this.label10.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // btn_INPUT15
             // 
@@ -2101,9 +2056,9 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.DimGray;
             this.ClientSize = new System.Drawing.Size(1920, 1080);
+            this.Controls.Add(this.tableLayoutPanel31);
             this.Controls.Add(this.tlpUnder);
             this.Controls.Add(this.Main_TabControl);
-            this.Controls.Add(this.tableLayoutPanel31);
             this.Controls.Add(this.tlpTopSide);
             this.ForeColor = System.Drawing.Color.Black;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
@@ -2144,8 +2099,6 @@
             this.tableLayoutPanel23.ResumeLayout(false);
             this.tableLayoutPanel24.ResumeLayout(false);
             this.tableLayoutPanel25.ResumeLayout(false);
-            this.tableLayoutPanel26.ResumeLayout(false);
-            this.tableLayoutPanel26.PerformLayout();
             this.Tab_Log.ResumeLayout(false);
             this.Main_TabControl.ResumeLayout(false);
             this.Tab_Home.ResumeLayout(false);
@@ -2228,9 +2181,6 @@
         public System.Windows.Forms.Button button1;
         public System.Windows.Forms.Button btn_OUTPUT0;
         public System.Windows.Forms.Button button8;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel26;
-        private System.Windows.Forms.Label label19;
-        private System.Windows.Forms.Label label10;
         public System.Windows.Forms.Button btn_INPUT15;
         public System.Windows.Forms.Button btn_INPUT14;
         public System.Windows.Forms.Button btn_INPUT13;
