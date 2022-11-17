@@ -165,7 +165,7 @@ namespace VISION
                 num_Exposure.Value = Convert.ToDecimal(CamSet.ReadData($"Camera{Glob.CamNumber}", "Exposure"));
                 num_Gain.Value = Convert.ToDecimal(CamSet.ReadData($"Camera{Glob.CamNumber}", "Gain"));
 
-                for (int i = 0; i < 6; i++)
+                for (int i = 0; i < Main.camcount; i++)
                 {
                     gainvalue[i] = Convert.ToDouble(CamSet.ReadData($"Camera{i}", "Exposure"));
                     exposurevalue[i] = Convert.ToDouble(CamSet.ReadData($"Camera{i}", "Gain"));
@@ -765,12 +765,6 @@ namespace VISION
                 btn_Cam2.PerformClick();
             if (e.Control && e.KeyCode == Keys.D3) //ctrl + 3 : 3번카메라 화면.
                 btn_Cam3.PerformClick();
-            if (e.Control && e.KeyCode == Keys.D4) //ctrl + 4 : 4번카메라 화면.
-                btn_Cam4.PerformClick();
-            if (e.Control && e.KeyCode == Keys.D5) //ctrl + 5 : 5번카메라 화면.
-                btn_Cam5.PerformClick();
-            if (e.Control && e.KeyCode == Keys.D6) //ctrl + 6 : 6번카메라 화면.
-                btn_Cam6.PerformClick();
         }
 
         //private void LINEINSPECTION_DoubleClick(object sender, EventArgs e)
@@ -789,9 +783,8 @@ namespace VISION
             btn_Cam1.BackColor = Glob.CamNumber == 0 ? Color.Lime : Color.Silver;
             btn_Cam2.BackColor = Glob.CamNumber == 1 ? Color.Lime : Color.Silver;
             btn_Cam3.BackColor = Glob.CamNumber == 2 ? Color.Lime : Color.Silver;
-            btn_Cam4.BackColor = Glob.CamNumber == 3 ? Color.Lime : Color.Silver;
-            btn_Cam5.BackColor = Glob.CamNumber == 4 ? Color.Lime : Color.Silver;
-            btn_Cam6.BackColor = Glob.CamNumber == 5 ? Color.Lime : Color.Silver;
+
+
         }
         private void UpdateCameraSet()
         {
@@ -1250,12 +1243,12 @@ namespace VISION
             switch (s_toolname[0])
             {
                 case "Line ":
-                    TempLines[Glob.CamNumber, (int)num_DimensionToolNum.Value].InputImage((CogImage8Grey)cdyDisplay.Image);
-                    TempLines[Glob.CamNumber, (int)num_DimensionToolNum.Value].ToolSetup();
+                    TempLines[Glob.CamNumber, Convert.ToInt32(s_toolname[1])].InputImage((CogImage8Grey)cdyDisplay.Image);
+                    TempLines[Glob.CamNumber, Convert.ToInt32(s_toolname[1])].ToolSetup();
                     break;
                 case "Caliper ":
-                    TempCaliper[Glob.CamNumber, (int)num_DimensionToolNum.Value].InputImage((CogImage8Grey)cdyDisplay.Image);
-                    TempCaliper[Glob.CamNumber, (int)num_DimensionToolNum.Value].ToolSetup();
+                    TempCaliper[Glob.CamNumber, Convert.ToInt32(s_toolname[1])].InputImage((CogImage8Grey)cdyDisplay.Image);
+                    TempCaliper[Glob.CamNumber, Convert.ToInt32(s_toolname[1])].ToolSetup();
                     break;
             }
         }

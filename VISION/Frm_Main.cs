@@ -66,21 +66,17 @@ namespace VISION
         public bool[] InspectResult = new bool[6]; //검사결과.
         public bool Modelchange = false; //모델체인지
 
-        public Stopwatch[] InspectTime = new Stopwatch[6]; //검사시간
-        public double[] OK_Count = new double[6]; //양품개수
-        public double[] NG_Count = new double[6]; //NG품개수
-        public double[] TOTAL_Count = new double[6]; //총개수
-        public double[] NG_Rate = new double[6]; //총개수
+        public Stopwatch[] InspectTime = new Stopwatch[3]; //검사시간
+        public double[] OK_Count = new double[3]; //양품개수
+        public double[] NG_Count = new double[3]; //NG품개수
+        public double[] TOTAL_Count = new double[3]; //총개수
+        public double[] NG_Rate = new double[3]; //총개수
 
-        public bool[] InspectFlag = new bool[6]; //검사 플래그.
+        public bool[] InspectFlag = new bool[3]; //검사 플래그.
 
         Thread snap1; //CAM1 Shot 쓰레드
         Thread snap2; //CAM2 Shot 쓰레드
         Thread snap3; //CAM3 Shot 쓰레드
-
-        Thread snap4; //CAM4 Shot 쓰레드
-        Thread snap5; //CAM5 Shot 쓰레드
-        Thread snap6; //CAM6 Shot 쓰레드
 
         Label[] OK_Label;
         Label[] NG_Label;
@@ -190,7 +186,6 @@ namespace VISION
             CamSet();
             CognexModelLoad();
             log.AddLogMessage(LogType.Infomation, 0, "Vision Program Start");
-            //Process.Start($"{Glob.LOADINGFROM}");
             Process[] myProcesses = Process.GetProcessesByName("LoadingForm_KHM");
             if (myProcesses.LongLength > 0)
             {
@@ -492,27 +487,7 @@ namespace VISION
                                     mDataStream[i].RegisterNewBufferEvent(BGAPI2.Events.EventMode.EVENT_HANDLER);
                                     mDataStream[i].NewBufferEvent += new BGAPI2.Events.DataStreamEventControl.NewBufferEventHandler(mDataStream_NewBufferEvent3);
                                     break;
-                                case 3:
-                                    mInterface[i].RegisterPnPEvent(BGAPI2.Events.EventMode.EVENT_HANDLER);
-                                    mInterface[i].PnPEvent += new BGAPI2.Events.InterfaceEventControl.PnPEventHandler(mInterface_PnPEvent4);
-                                    mDataStream[i] = datastreamList[i][sDataStreamID[i]];
-                                    mDataStream[i].RegisterNewBufferEvent(BGAPI2.Events.EventMode.EVENT_HANDLER);
-                                    mDataStream[i].NewBufferEvent += new BGAPI2.Events.DataStreamEventControl.NewBufferEventHandler(mDataStream_NewBufferEvent4);
-                                    break;
-                                case 4:
-                                    mInterface[i].RegisterPnPEvent(BGAPI2.Events.EventMode.EVENT_HANDLER);
-                                    mInterface[i].PnPEvent += new BGAPI2.Events.InterfaceEventControl.PnPEventHandler(mInterface_PnPEvent5);
-                                    mDataStream[i] = datastreamList[i][sDataStreamID[i]];
-                                    mDataStream[i].RegisterNewBufferEvent(BGAPI2.Events.EventMode.EVENT_HANDLER);
-                                    mDataStream[i].NewBufferEvent += new BGAPI2.Events.DataStreamEventControl.NewBufferEventHandler(mDataStream_NewBufferEvent5);
-                                    break;
-                                case 5:
-                                    mInterface[i].RegisterPnPEvent(BGAPI2.Events.EventMode.EVENT_HANDLER);
-                                    mInterface[i].PnPEvent += new BGAPI2.Events.InterfaceEventControl.PnPEventHandler(mInterface_PnPEvent6);
-                                    mDataStream[i] = datastreamList[i][sDataStreamID[i]];
-                                    mDataStream[i].RegisterNewBufferEvent(BGAPI2.Events.EventMode.EVENT_HANDLER);
-                                    mDataStream[i].NewBufferEvent += new BGAPI2.Events.DataStreamEventControl.NewBufferEventHandler(mDataStream_NewBufferEvent6);
-                                    break;
+                               
                             }
                         }
                     }
@@ -663,90 +638,7 @@ namespace VISION
                 cm.info(ex.Message);
             }
         }
-        protected void mInterface_PnPEvent4(object sender, BGAPI2.Events.PnPEventArgs mPnPEvent)
-        {
-            try
-            {
-                string strDevID = mPnPEvent.ID;
-                string serialNumber = mPnPEvent.SerialNumber;
-                BGAPI2.Events.PnPType type = mPnPEvent.PnPType;
-
-                if (type == BGAPI2.Events.PnPType.DEVICEREMOVED)
-                {
-                    ResetGrabber(3);
-                    bool bSuccess = ReconnectGrabber(3);
-                    if (bSuccess == true)
-                    {
-                        //Log("Camera ReConnect Success");
-                    }
-                    else
-                    {
-                        cm.info("Camera ReConnect Fail");
-                    }
-                    //timer_camreconnect.Start();
-                }
-            }
-            catch (Exception ex)
-            {
-                cm.info(ex.Message);
-            }
-        }
-        protected void mInterface_PnPEvent5(object sender, BGAPI2.Events.PnPEventArgs mPnPEvent)
-        {
-            try
-            {
-                string strDevID = mPnPEvent.ID;
-                string serialNumber = mPnPEvent.SerialNumber;
-                BGAPI2.Events.PnPType type = mPnPEvent.PnPType;
-
-                if (type == BGAPI2.Events.PnPType.DEVICEREMOVED)
-                {
-                    ResetGrabber(4);
-                    bool bSuccess = ReconnectGrabber(4);
-                    if (bSuccess == true)
-                    {
-                        //Log("Camera ReConnect Success");
-                    }
-                    else
-                    {
-                        cm.info("Camera ReConnect Fail");
-                    }
-                    //timer_camreconnect.Start();
-                }
-            }
-            catch (Exception ex)
-            {
-                cm.info(ex.Message);
-            }
-        }
-        protected void mInterface_PnPEvent6(object sender, BGAPI2.Events.PnPEventArgs mPnPEvent)
-        {
-            try
-            {
-                string strDevID = mPnPEvent.ID;
-                string serialNumber = mPnPEvent.SerialNumber;
-                BGAPI2.Events.PnPType type = mPnPEvent.PnPType;
-
-                if (type == BGAPI2.Events.PnPType.DEVICEREMOVED)
-                {
-                    ResetGrabber(5);
-                    bool bSuccess = ReconnectGrabber(5);
-                    if (bSuccess == true)
-                    {
-                        //Log("Camera ReConnect Success");
-                    }
-                    else
-                    {
-                        cm.info("Camera ReConnect Fail");
-                    }
-                    //timer_camreconnect.Start();
-                }
-            }
-            catch (Exception ex)
-            {
-                cm.info(ex.Message);
-            }
-        }
+        
         protected void ResetGrabber(int camnumber)
         {
             try
@@ -1170,386 +1062,6 @@ namespace VISION
         }
         #endregion
 
-        #region 카메라 이미지 그랩이벤트 CAM3
-        void mDataStream_NewBufferEvent4(object sender, BGAPI2.Events.NewBufferEventArgs mDSEvent)
-        {
-            try
-            {
-                if (frm_toolsetup == null)
-                {
-                    InspectFlag[3] = true;
-                    //StatsCheck($"InspcetFlag[3]={InspectFlag[3].ToString()}", false);
-                    OutPutSignal_Off(9);
-                    OutPutSignal_Off(10);
-                }
-                ImageProcessor imgProcessor = imgProcessor = ImageProcessor.Instance;
-                BGAPI2.Buffer bufferFilled = null;
-                bufferFilled = mDSEvent.BufferObj;
-                int nBufferOffset = (int)bufferFilled.ImageOffset;
-                if (bufferFilled == null)
-                {
-                    System.Console.Write("Error: Buffer Timeout after 1000 msec\r\n");
-                }
-                else if (bufferFilled != null)
-                {
-
-                    m_SnapBuffer[3] = bufferFilled.MemPtr + nBufferOffset;
-
-                    //BGAPI2.Image mImage = imgProcessor.CreateImage((uint)m_nCamWidth[3], (uint)m_nCamHeight[3], (string)bufferFilled.PixelFormat, m_SnapBuffer[3], (ulong)bufferFilled.MemSize);
-                    //m_SnapImage[3] = mImage.CreateBitmap(true);//mTransformImage.CreateBitmap(true);
-                    m_SnapImage[3] = new Bitmap(m_nCamWidth[3], m_nCamHeight[3], m_nCamWidth[3], PixelFormat.Format8bppIndexed, bufferFilled.MemPtr + nBufferOffset);
-                    CreateGrayColorMap(ref m_SnapImage[3]);
-
-                    Monoimage[3] = new CogImage8Grey(m_SnapImage[3]);
-                    if (frm_toolsetup != null)
-                    {
-                        frm_toolsetup.cdyDisplay.Image = Monoimage[3];
-                        if (m_bSingleSnap[3] == true)
-                        {
-                            frm_toolsetup.cdyDisplay.Fit();
-                        }
-                    }
-                    else
-                    {
-                        InspectTime[3] = new Stopwatch();
-                        InspectTime[3].Reset();
-                        InspectTime[3].Start();
-
-                        cdyDisplay4.Image = Monoimage[3];
-                        cdyDisplay4.Fit();
-                        if (Inspect_Cam3(cdyDisplay4) == true) // 검사 결과
-                        {
-                            //검사 결과 OK
-
-                            BeginInvoke((Action)delegate
-                            {
-                                //DgvResult(dgv_Line2, 3, 1); //-추가된함수
-                                lb_Cam4_Result.BackColor = Color.Lime;
-                                lb_Cam4_Result.Text = "O K";
-                                OK_Count[3]++;
-                                if (Glob.OKImageSave)
-                                    ImageSave4("OK", 4, cdyDisplay4);
-                            });
-                            OutPutSignal_On(9);
-                        }
-                        else
-                        {
-                            //검사 결과 NG
-
-                            BeginInvoke((Action)delegate
-                            {
-                                //DgvResult(dgv_Line2, 3, 1); //-추가된함수
-                                lb_Cam4_Result.BackColor = Color.Red;
-                                lb_Cam4_Result.Text = "N G";
-                                NG_Count[3]++;
-                                if (Glob.NGImageSave)
-                                    ImageSave4("NG", 4, cdyDisplay4);
-                            });
-                            OutPutSignal_On(10);
-                        }
-                        InspectTime[3].Stop();
-                        InspectFlag[3] = false;
-                        DataSave4(InspectTime[3].ElapsedMilliseconds.ToString(), 3);
-                        //StatsCheck($"InspcetFlag[3]={InspectFlag[3].ToString()}", false);
-                        BeginInvoke((Action)delegate { lb_Cam4_InsTime.Text = InspectTime[3].ElapsedMilliseconds.ToString() + "msec"; });
-                        Thread.Sleep(100);
-                    }
-                    // queue buffer again
-                    System.Console.Write(" Image {0, 5:d} received in memory address {1:X}\r\n", bufferFilled.FrameID, (ulong)bufferFilled.MemPtr);
-                    bufferFilled.QueueBuffer();
-                    if (m_bSingleSnap[3])
-                    {
-                        m_bSingleSnap[3] = false;
-                        mDevice[3].RemoteNodeList["AcquisitionStop"].Execute();
-                        mDataStream[3].StopAcquisition();
-                        //gbool_grabcomplete1 = true;
-                        //gbool_grab1 = true;
-                    }
-                }
-                else if (bufferFilled.IsIncomplete == true)
-                {
-                    System.Console.Write("Error: Image is incomplete\r\n");
-                    // queue buffer again
-                    bufferFilled.QueueBuffer();
-                }
-
-                frames[3]++;
-                Colorimage[3] = null;
-                m_SnapImage[3] = null;
-                if (frames[3] >= 2)
-                {
-                    frames[3] = 0;
-                    GC.Collect();
-                }
-
-                //Thread.Sleep(500);
-                //OutPutSignal_Off(9);
-                //OutPutSignal_Off(10);
-
-                return;
-            }
-            catch (BGAPI2.Exceptions.IException ex)
-            {
-                //Log(ex.Message);
-            }
-
-            // return;
-        }
-        #endregion
-
-        #region  카메라 이미지 그랩이벤트 CAM4
-        void mDataStream_NewBufferEvent5(object sender, BGAPI2.Events.NewBufferEventArgs mDSEvent)
-        {
-            try
-            {
-                if (frm_toolsetup == null)
-                {
-                    InspectFlag[4] = true;
-                    //StatsCheck($"InspcetFlag[4]={InspectFlag[4].ToString()}", false);
-                    OutPutSignal_Off(11);
-                    OutPutSignal_Off(12);
-                }
-                ImageProcessor imgProcessor = imgProcessor = ImageProcessor.Instance;
-                BGAPI2.Buffer bufferFilled = null;
-                bufferFilled = mDSEvent.BufferObj;
-                int nBufferOffset = (int)bufferFilled.ImageOffset;
-                if (bufferFilled == null)
-                {
-                    System.Console.Write("Error: Buffer Timeout after 1000 msec\r\n");
-                }
-                else if (bufferFilled != null)
-                {
-
-                    m_SnapBuffer[4] = bufferFilled.MemPtr + nBufferOffset;
-
-                    //BGAPI2.Image mImage = imgProcessor.CreateImage((uint)m_nCamWidth[4], (uint)m_nCamHeight[4], (string)bufferFilled.PixelFormat, m_SnapBuffer[4], (ulong)bufferFilled.MemSize);
-                    //m_SnapImage[4] = mImage.CreateBitmap(true);//mTransformImage.CreateBitmap(true);
-                    m_SnapImage[4] = new Bitmap(m_nCamWidth[4], m_nCamHeight[4], m_nCamWidth[4], PixelFormat.Format8bppIndexed, bufferFilled.MemPtr + nBufferOffset);
-                    CreateGrayColorMap(ref m_SnapImage[4]);
-
-                    Monoimage[4] = new CogImage8Grey(m_SnapImage[4]);
-
-                    if (frm_toolsetup != null)
-                    {
-                        frm_toolsetup.cdyDisplay.Image = Monoimage[4];
-                        if (m_bSingleSnap[4] == true)
-                        {
-                            frm_toolsetup.cdyDisplay.Fit();
-                        }
-                    }
-                    else
-                    {
-                        InspectTime[4] = new Stopwatch();
-                        InspectTime[4].Reset();
-                        InspectTime[4].Start();
-
-                        cdyDisplay5.Image = Monoimage[4];
-                        cdyDisplay5.Fit();
-                        if (Inspect_Cam4(cdyDisplay5) == true) // 검사 결과
-                        {
-                            //검사 결과 OK
-
-                            BeginInvoke((Action)delegate
-                            {
-                                //DgvResult(dgv_Line2, 4, 3);
-                                lb_Cam5_Result.BackColor = Color.Lime;
-                                lb_Cam5_Result.Text = "O K";
-                                OK_Count[4]++;
-                                if (Glob.OKImageSave)
-                                    ImageSave5("OK", 5, cdyDisplay5);
-                            });
-                            OutPutSignal_On(11);
-                        }
-                        else
-                        {
-                            //검사 결과 NG
-
-                            BeginInvoke((Action)delegate
-                            {
-                                //DgvResult(dgv_Line2, 4, 3);
-                                lb_Cam5_Result.BackColor = Color.Red;
-                                lb_Cam5_Result.Text = "N G";
-                                NG_Count[4]++;
-                                if (Glob.NGImageSave)
-                                    ImageSave5("NG", 5, cdyDisplay5);
-                            });
-                            OutPutSignal_On(12);
-                        }
-                        InspectTime[4].Stop();
-                        InspectFlag[4] = false;
-                        DataSave5(InspectTime[4].ElapsedMilliseconds.ToString(), 4);
-                        //StatsCheck($"InspcetFlag[4]={InspectFlag[4].ToString()}", false);
-                        BeginInvoke((Action)delegate { lb_Cam5_InsTime.Text = InspectTime[4].ElapsedMilliseconds.ToString() + "msec"; });
-                        Thread.Sleep(100);
-                    }
-                    // queue buffer again
-                    System.Console.Write(" Image {0, 5:d} received in memory address {1:X}\r\n", bufferFilled.FrameID, (ulong)bufferFilled.MemPtr);
-                    bufferFilled.QueueBuffer();
-                    if (m_bSingleSnap[4])
-                    {
-                        m_bSingleSnap[4] = false;
-                        mDevice[4].RemoteNodeList["AcquisitionStop"].Execute();
-                        mDataStream[4].StopAcquisition();
-                        //gbool_grabcomplete1 = true;
-                        //gbool_grab1 = true;
-                    }
-                }
-                else if (bufferFilled.IsIncomplete == true)
-                {
-                    System.Console.Write("Error: Image is incomplete\r\n");
-                    // queue buffer again
-                    bufferFilled.QueueBuffer();
-                }
-
-                frames[4]++;
-                Colorimage[4] = null;
-                m_SnapImage[4] = null;
-                if (frames[4] >= 2)
-                {
-                    frames[4] = 0;
-                    GC.Collect();
-                }
-
-                //Thread.Sleep(500);
-                //OutPutSignal_Off(11);
-                //OutPutSignal_Off(12);
-
-                return;
-            }
-            catch (BGAPI2.Exceptions.IException ex)
-            {
-                // Log(ex.Message);
-            }
-
-        }
-        #endregion
-
-        #region 카메라 이미지 그랩이벤트 CAM5
-        void mDataStream_NewBufferEvent6(object sender, BGAPI2.Events.NewBufferEventArgs mDSEvent)
-        {
-            try
-            {
-                if (frm_toolsetup == null)
-                {
-                    InspectFlag[5] = true;
-                    //StatsCheck($"InspcetFlag[5]={InspectFlag[5].ToString()}", false);
-                    OutPutSignal_Off(13);
-                    OutPutSignal_Off(14);
-                }
-                ImageProcessor imgProcessor = imgProcessor = ImageProcessor.Instance;
-                BGAPI2.Buffer bufferFilled = null;
-                bufferFilled = mDSEvent.BufferObj;
-                int nBufferOffset = (int)bufferFilled.ImageOffset;
-                if (bufferFilled == null)
-                {
-                    System.Console.Write("Error: Buffer Timeout after 1000 msec\r\n");
-                }
-                else if (bufferFilled != null)
-                {
-
-                    m_SnapBuffer[5] = bufferFilled.MemPtr + nBufferOffset;
-
-                    //BGAPI2.Image mImage = imgProcessor.CreateImage((uint)m_nCamWidth[5], (uint)m_nCamHeight[5], (string)bufferFilled.PixelFormat, m_SnapBuffer[5], (ulong)bufferFilled.MemSize);
-                    //m_SnapImage[5] = mImage.CreateBitmap(true);//mTransformImage.CreateBitmap(true);
-                    m_SnapImage[5] = new Bitmap(m_nCamWidth[5], m_nCamHeight[5], m_nCamWidth[5], PixelFormat.Format8bppIndexed, bufferFilled.MemPtr + nBufferOffset);
-                    CreateGrayColorMap(ref m_SnapImage[5]);
-
-                    Monoimage[5] = new CogImage8Grey(m_SnapImage[5]);
-
-                    if (frm_toolsetup != null)
-                    {
-                        frm_toolsetup.cdyDisplay.Image = Monoimage[5];
-                        if (m_bSingleSnap[5] == true)
-                        {
-                            frm_toolsetup.cdyDisplay.Fit();
-                        }
-                    }
-                    else
-                    {
-                        InspectTime[5] = new Stopwatch();
-                        InspectTime[5].Reset();
-                        InspectTime[5].Start();
-
-                        cdyDisplay6.Image = Monoimage[5];
-                        cdyDisplay6.Fit();
-                        if (Inspect_Cam5(cdyDisplay6) == true) // 검사 결과
-                        {
-                            //검사 결과 OK
-
-                            BeginInvoke((Action)delegate
-                            {
-                                //DgvResult(dgv_Line2, 5, 5);
-                                lb_Cam6_Result.BackColor = Color.Lime;
-                                lb_Cam6_Result.Text = "O K";
-                                OK_Count[5]++;
-                                if (Glob.OKImageSave)
-                                    ImageSave6("OK", 6, cdyDisplay6);
-                            });
-                            OutPutSignal_On(13);
-                        }
-                        else
-                        {
-                            //검사 결과 NG
-
-                            BeginInvoke((Action)delegate
-                            {
-                                //DgvResult(dgv_Line2, 5, 5);
-                                lb_Cam6_Result.BackColor = Color.Red;
-                                lb_Cam6_Result.Text = "N G";
-                                NG_Count[5]++;
-                                if (Glob.NGImageSave)
-                                    ImageSave6("NG", 6, cdyDisplay6);
-                            });
-                            OutPutSignal_On(14);
-                        }
-                        InspectTime[5].Stop();
-                        InspectFlag[5] = false;
-                        DataSave6(InspectTime[5].ElapsedMilliseconds.ToString(), 5);
-                        //StatsCheck($"InspcetFlag[5]={InspectFlag[5].ToString()}", false);
-                        BeginInvoke((Action)delegate { lb_Cam6_InsTime.Text = InspectTime[5].ElapsedMilliseconds.ToString() + "msec"; });
-                        Thread.Sleep(100);
-                    }
-                    // queue buffer again
-                    System.Console.Write(" Image {0, 5:d} received in memory address {1:X}\r\n", bufferFilled.FrameID, (ulong)bufferFilled.MemPtr);
-                    bufferFilled.QueueBuffer();
-                    if (m_bSingleSnap[5])
-                    {
-                        m_bSingleSnap[5] = false;
-                        mDevice[5].RemoteNodeList["AcquisitionStop"].Execute();
-                        mDataStream[5].StopAcquisition();
-                        //gbool_grabcomplete1 = true;
-                        //gbool_grab1 = true;
-                    }
-                }
-                else if (bufferFilled.IsIncomplete == true)
-                {
-                    System.Console.Write("Error: Image is incomplete\r\n");
-                    // queue buffer again
-                    bufferFilled.QueueBuffer();
-                }
-
-                frames[5]++;
-                Colorimage[5] = null;
-                m_SnapImage[5] = null;
-                if (frames[5] >= 2)
-                {
-                    frames[5] = 0;
-                    GC.Collect();
-                }
-
-                //Thread.Sleep(500);
-                //OutPutSignal_Off(13);
-                //OutPutSignal_Off(14);
-
-                return;
-            }
-            catch (BGAPI2.Exceptions.IException ex)
-            {
-                //Log(ex.Message);
-            }
-        }
-        #endregion
-
         protected bool ReconnectGrabber(int camnumber)
         {
             //Camera Reconnect Grabber 부분 디버깅 해봐야댐
@@ -1754,72 +1266,8 @@ namespace VISION
                 cm.info($"Camera 3 is not connected : {ee.Message}");
             }
         }
-        public void SnapShot4()
-        {
-            try
-            {
-                if (mDataStream[3].IsGrabbing)
-                {
-                    //검사 NG났을때 이부분 타는지 확인해보기 - 191027
-                    log.AddLogMessage(LogType.Infomation, 0, "SnapShot4 error");
-                    mDevice[3].RemoteNodeList["AcquisitionStop"].Execute();
-                    mDataStream[3].StopAcquisition();
-                    return;
-                }
-                m_bSingleSnap[3] = true;
-                mDataStream[3].StartAcquisition(1);
-                mDevice[3].RemoteNodeList["AcquisitionStart"].Execute();
-            }
-            catch (Exception ee)
-            {
-                //MessageBox.Show("Camera is not connected");
-                cm.info($"Camera 4 is not connected : {ee.Message}");
-            }
-        }
-        public void SnapShot5()
-        {
-            try
-            {
-                if (mDataStream[4].IsGrabbing)
-                {
-                    //검사 NG났을때 이부분 타는지 확인해보기 - 191027
-                    log.AddLogMessage(LogType.Infomation, 0, "SnapShot5 error");
-                    mDevice[4].RemoteNodeList["AcquisitionStop"].Execute();
-                    mDataStream[4].StopAcquisition();
-                    return;
-                }
-                m_bSingleSnap[4] = true;
-                mDataStream[4].StartAcquisition(1);
-                mDevice[4].RemoteNodeList["AcquisitionStart"].Execute();
-            }
-            catch (Exception ee)
-            {
-                //MessageBox.Show("Camera is not connected");
-                cm.info($"Camera 5 is not connected : {ee.Message}");
-            }
-        }
-        public void SnapShot6()
-        {
-            try
-            {
-                if (mDataStream[5].IsGrabbing)
-                {
-                    //검사 NG났을때 이부분 타는지 확인해보기 - 191027
-                    log.AddLogMessage(LogType.Infomation, 0, "SnapShot6 error");
-                    mDevice[5].RemoteNodeList["AcquisitionStop"].Execute();
-                    mDataStream[5].StopAcquisition();
-                    return;
-                }
-                m_bSingleSnap[5] = true;
-                mDataStream[5].StartAcquisition(1);
-                mDevice[5].RemoteNodeList["AcquisitionStart"].Execute();
-            }
-            catch (Exception ee)
-            {
-                //MessageBox.Show("Camera is not connected");
-                cm.info($"Camera 6 is not connected : {ee.Message}");
-            }
-        }
+       
+             
         public bool StartLive1(int camnumber)
         {
             try
@@ -1894,10 +1342,10 @@ namespace VISION
         {
             try
             {
-                OK_Label = new Label[6] { lb_CAM1_OK, lb_CAM2_OK, lb_CAM3_OK, lb_CAM4_OK, lb_CAM5_OK, lb_CAM6_OK };
-                NG_Label = new Label[6] { lb_CAM1_NG, lb_CAM2_NG, lb_CAM3_NG, lb_CAM4_NG, lb_CAM5_NG, lb_CAM6_NG };
-                TOTAL_Label = new Label[6] { lb_CAM1_TOTAL, lb_CAM2_TOTAL, lb_CAM3_TOTAL, lb_CAM4_TOTAL, lb_CAM5_TOTAL, lb_CAM6_TOTAL };
-                NGRATE_Label = new Label[6] { lb_CAM1_NGRATE, lb_CAM2_NGRATE, lb_CAM3_NGRATE, lb_CAM4_NGRATE, lb_CAM5_NGRATE, lb_CAM6_NGRATE };
+                OK_Label = new Label[3] { lb_CAM1_OK, lb_CAM2_OK, lb_CAM3_OK };
+                NG_Label = new Label[3] { lb_CAM1_NG, lb_CAM2_NG, lb_CAM3_NG };
+                TOTAL_Label = new Label[3] { lb_CAM1_TOTAL, lb_CAM2_TOTAL, lb_CAM3_TOTAL };
+                NGRATE_Label = new Label[3] { lb_CAM1_NGRATE, lb_CAM2_NGRATE, lb_CAM3_NGRATE};
 
                 INIControl Modellist = new INIControl(Glob.MODELLIST); ;
                 INIControl CFGFILE = new INIControl(Glob.CONFIGFILE); ;
@@ -1998,13 +1446,7 @@ namespace VISION
             }
         }
         //Output 신호들
-        // 0 = Line #1 Vision Ready      8 = Line #2 Vision Ready
-        // 1 = CAM 1 Ok                  9 = CAM 4 Ok 
-        // 2 = CAM 1 NG                 10 = CAM 4 NG
-        // 3 = CAM 2 OK                 11 = CAM 5 OK
-        // 4 = CAM 2 NG                 12 = CAM 5 NG
-        // 5 = CAM 3 OK                 13 = CAM 6 OK
-        // 6 = CAM 3 NG                 14 = CAM 6 NG
+
 
         public void OutPutSignal_On(int jobNo)
         {
@@ -2150,141 +1592,7 @@ namespace VISION
                                 OutPutSignal_Off(5);
                                 OutPutSignal_Off(6);
                                 //}
-                                break;
-                            case 10:// LINE #2 Vision Trigger 신호
-                                log.AddLogMessage(LogType.Infomation, 0, "Line #2 Vision Trigger");
-                                OutPutSignal_Off(9);
-                                OutPutSignal_Off(10);
-                                OutPutSignal_Off(11);
-                                OutPutSignal_Off(12);
-                                OutPutSignal_Off(13);
-                                OutPutSignal_Off(14);
-                                if (InspectFlag[3] == false && InspectFlag[4] == false && InspectFlag[5] == false)
-                                {
-                                    cdyDisplay4.Image = null;
-                                    cdyDisplay4.InteractiveGraphics.Clear();
-                                    cdyDisplay4.StaticGraphics.Clear();
-                                    cdyDisplay5.Image = null;
-                                    cdyDisplay5.InteractiveGraphics.Clear();
-                                    cdyDisplay5.StaticGraphics.Clear();
-                                    cdyDisplay6.Image = null;
-                                    cdyDisplay6.InteractiveGraphics.Clear();
-                                    cdyDisplay6.StaticGraphics.Clear();
-                                    BeginInvoke((Action)delegate
-                                    {
-                                        lb_Cam4_Result.Text = "Result";
-                                        lb_Cam4_Result.BackColor = SystemColors.Control;
-                                        lb_Cam5_Result.Text = "Result";
-                                        lb_Cam5_Result.BackColor = SystemColors.Control;
-                                        lb_Cam6_Result.Text = "Result";
-                                        lb_Cam6_Result.BackColor = SystemColors.Control;
-                                    });
-                                    snap4 = new Thread(new ThreadStart(SnapShot4));
-                                    snap4.Priority = ThreadPriority.Highest;
-                                    snap4.Start();
-
-                                    snap5 = new Thread(new ThreadStart(SnapShot5));
-                                    snap5.Priority = ThreadPriority.Highest;
-                                    snap5.Start();
-
-                                    snap6 = new Thread(new ThreadStart(SnapShot6));
-                                    snap6.Priority = ThreadPriority.Highest;
-                                    snap6.Start();
-                                }
-                                else
-                                {
-                                    OutPutSignal_Off(9);
-                                    OutPutSignal_Off(10);
-                                    OutPutSignal_Off(11);
-                                    OutPutSignal_Off(12);
-                                    OutPutSignal_Off(13);
-                                    OutPutSignal_Off(14);
-                                    InspectFlag[3] = false;
-                                    InspectFlag[4] = false;
-                                    InspectFlag[5] = false;
-                                    log.AddLogMessage(LogType.Infomation, 0, "LINE #2 검사 결과 초기화");
-                                }
-                                break;
-                            case 11: //LINE #2 결과 체크 신호
-                                log.AddLogMessage(LogType.Infomation, 0, "Line #2 Result Check");
-                                //if (InspectFlag[3] == false && InspectFlag[4] == false && InspectFlag[5] == false)
-                                //{
-                                OutPutSignal_Off(9);
-                                OutPutSignal_Off(10);
-                                OutPutSignal_Off(11);
-                                OutPutSignal_Off(12);
-                                OutPutSignal_Off(13);
-                                OutPutSignal_Off(14);
-                                //}
-                                break;
-                            case 12:
-                                break;
-                            case 13:
-                                Process.Start($"{Glob.MODELCHANGEFROM}");
-                                for (int k = 0; k < camcount; k++)
-                                {
-                                    if (Glob.RunnModel.Loadmodel("K12E DIMPLE", Glob.MODELROOT, k) == true)
-                                    {
-                                        if (k == camcount - 1)
-                                        {
-                                            lb_CurruntModelName.Text = Glob.RunnModel.Modelname();
-                                            Glob.CurruntModelName = Glob.RunnModel.Modelname();
-                                            CamSet();
-                                            Process[] myProcesses = Process.GetProcessesByName("ModelChange_KHM");
-                                            if (myProcesses.LongLength > 0)
-                                            {
-                                                myProcesses[0].Kill();
-                                            }
-                                            log.AddLogMessage(LogType.Infomation, 0, "모델 전환 성공");
-                                        }
-                                    }
-                                }
-                                break;
-                            case 14: 
-                                Process.Start($"{Glob.MODELCHANGEFROM}");
-                                for (int k = 0; k < camcount; k++)
-                                {
-                                    if (Glob.RunnModel.Loadmodel("K12E WEBBING", Glob.MODELROOT, k) == true)
-                                    {
-                                        if (k == camcount - 1)
-                                        {
-                                            lb_CurruntModelName.Text = Glob.RunnModel.Modelname();
-                                            Glob.CurruntModelName = Glob.RunnModel.Modelname();
-                                            CamSet();
-                                            Process[] myProcesses = Process.GetProcessesByName("ModelChange_KHM");
-                                            if (myProcesses.LongLength > 0)
-                                            {
-                                                myProcesses[0].Kill();
-                                            }
-                                            log.AddLogMessage(LogType.Infomation, 0, "모델 전환 성공");
-                                        }
-                                    }
-                                }
-                                break;
-                            case 15: 
-                                Process.Start($"{Glob.MODELCHANGEFROM}");
-                                for (int k = 0; k < camcount; k++)
-                                {
-                                    if (Glob.RunnModel.Loadmodel("K12E CABLE STOPPER", Glob.MODELROOT, k) == true)
-                                    {
-                                        if (k == camcount - 1)
-                                        {
-                                            lb_CurruntModelName.Text = Glob.RunnModel.Modelname();
-                                            Glob.CurruntModelName = Glob.RunnModel.Modelname();
-                                            CamSet();
-                                            Process[] myProcesses = Process.GetProcessesByName("ModelChange_KHM");
-                                            if (myProcesses.LongLength > 0)
-                                            {
-                                                myProcesses[0].Kill();
-                                            }
-                                            log.AddLogMessage(LogType.Infomation, 0, "모델 전환 성공");
-                                        }
-                                    }
-                                }
-                                //lb_CurruntModelName.Text = Glob.RunnModel.Modelname();
-                                //Glob.CurruntModelName = Glob.RunnModel.Modelname();
-                                //CamSet();
-                                break;
+                                break;                           
                         }
                     }
                 }

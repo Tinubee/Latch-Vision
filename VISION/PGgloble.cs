@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.IO;
 
 namespace VISION
 {
@@ -34,10 +35,13 @@ namespace VISION
         }
         #endregion
         public readonly string PROGRAMROOT = Application.StartupPath;
+        public static DirectoryInfo currentPath = Directory.GetParent(Environment.CurrentDirectory);
 
-        public readonly string LOADINGFROM = Application.StartupPath + "\\OtherForm\\LoadingForm\\LoadingForm_KHM\\bin\\Debug\\LoadingForm_KHM.exe"; //로딩창 경로
-        public readonly string SAVEFROM = Application.StartupPath + "\\OtherForm\\SaveForm\\SaveForm_KHM\\bin\\Debug\\SaveForm_KHM.exe"; //저장창 경로
-        public readonly string MODELCHANGEFROM = Application.StartupPath + "\\OtherForm\\ModelChange\\ModelChange_KHM\\bin\\Debug\\ModelChange_KHM.exe"; //변경창 경로
+        public static string topPath = currentPath.Parent.Parent.FullName;
+
+        public readonly string LOADINGFROM = topPath + "\\OtherForm\\LoadingForm\\LoadingForm_KHM\\bin\\Debug\\LoadingForm_KHM.exe"; //로딩창 경로
+        public readonly string SAVEFROM = topPath + "\\OtherForm\\SaveForm\\SaveForm_KHM\\bin\\Debug\\SaveForm_KHM.exe"; //저장창 경로
+        public readonly string MODELCHANGEFROM = topPath + "\\OtherForm\\ModelChange\\ModelChange_KHM\\bin\\Debug\\ModelChange_KHM.exe"; //변경창 경로
 
         public readonly string MODELROOT = Application.StartupPath + "\\Models"; //모델저장경로.
         public readonly string MODELLIST = Application.StartupPath + "\\ModelList.ini"; //모델리스트 ini파일
@@ -47,7 +51,7 @@ namespace VISION
         public readonly string CONFIGFILE = Application.StartupPath + "\\config.ini";
         public readonly string SETTING = Application.StartupPath + "\\setting.ini"; //setting값 저장
 
-        public readonly string PROGRAM_VERSION = "2.0.1"; //Program Version
+        public readonly string PROGRAM_VERSION = "1.0.0"; //Program Version
         #region "버전 관리 및 업데이트 내용"
         //1.0.0 - 현장투입 후 완성된 최종버전(주요기능 및 프로그램 구성 완료) - 날짜 / 이름
         //2.0.1 - 프로그램 로딩창, 저장창, 모델변경창 새로 추가.
@@ -96,13 +100,13 @@ namespace VISION
         public bool OKImageSave = true;
         public bool NGImageSave = true;
 
-        public double[,] InsPat_Result = new double[6, 30];
-        public double[,] MultiInsPat_Result = new double[6, 30];
+        public double[,] InsPat_Result = new double[3, 30];
+        public double[,] MultiInsPat_Result = new double[3, 30];
 
-        public bool[] PatternResult = new bool[6];
-        public bool[] BlobResult = new bool[6];
-        public bool[] CaliperResult = new bool[6];
-        public bool[] MeasureResult = new bool[6];
+        public bool[] PatternResult = new bool[3];
+        public bool[] BlobResult = new bool[3];
+        public bool[] CaliperResult = new bool[3];
+        public bool[] MeasureResult = new bool[3];
 
         public double StandPoint_X;
         public double StandPoint_Y;
