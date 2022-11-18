@@ -365,18 +365,6 @@ namespace VISION
                     lb_Tool_InspectResult.Text = Main.Inspect_Cam2(cdyDisplay) ? "O K" : "N G";
                     lb_Tool_InspectResult.BackColor = lb_Tool_InspectResult.Text == "O K" ? Color.Lime : Color.Red;
                     break;
-                case 3:
-                    lb_Tool_InspectResult.Text = Main.Inspect_Cam3(cdyDisplay) ? "O K" : "N G";
-                    lb_Tool_InspectResult.BackColor = lb_Tool_InspectResult.Text == "O K" ? Color.Lime : Color.Red;
-                    break;
-                case 4:
-                    lb_Tool_InspectResult.Text = Main.Inspect_Cam4(cdyDisplay) ? "O K" : "N G";
-                    lb_Tool_InspectResult.BackColor = lb_Tool_InspectResult.Text == "O K" ? Color.Lime : Color.Red;
-                    break;
-                case 5:
-                    lb_Tool_InspectResult.Text = Main.Inspect_Cam5(cdyDisplay) ? "O K" : "N G";
-                    lb_Tool_InspectResult.BackColor = lb_Tool_InspectResult.Text == "O K" ? Color.Lime : Color.Red;
-                    break;
             }
             Invoke(new Action(delegate ()
             {
@@ -1100,7 +1088,6 @@ namespace VISION
 
             TempLines[Glob.CamNumber, Convert.ToInt32(Tool1_Name[1])].Run((CogImage8Grey)cdyDisplay.Image);
             TempLines[Glob.CamNumber, Convert.ToInt32(Tool1_Name[1])].ResultDisplay(cdyDisplay, Collection);
-            TempDistance[Glob.CamNumber, (int)num_DimensionToolNum.Value].InputLine((int)num_DimensionToolNum.Value, TempLines[Glob.CamNumber, Convert.ToInt32(Tool1_Name[1])].GetLine());
         }
 
         private void CaliperXY(string ToolName)
@@ -1112,7 +1099,6 @@ namespace VISION
 
             TempCaliper[Glob.CamNumber, Convert.ToInt32(Tool2_Name[1])].Run((CogImage8Grey)cdyDisplay.Image);
             TempCaliper[Glob.CamNumber, Convert.ToInt32(Tool2_Name[1])].ResultDisplay(ref cdyDisplay);
-            TempDistance[Glob.CamNumber, (int)num_DimensionToolNum.Value].InputXY(TempCaliper[Glob.CamNumber, Convert.ToInt32(Tool2_Name[1])].Result_Corner_X(), TempCaliper[Glob.CamNumber, Convert.ToInt32(Tool2_Name[1])].Result_Corner_Y());
         }
         private void AveragePointXY(string ToolName)
         {
@@ -1123,8 +1109,8 @@ namespace VISION
 
             TempLines[Glob.CamNumber, Convert.ToInt32(Tool2_Name[1])].Run((CogImage8Grey)cdyDisplay.Image);
             TempLines[Glob.CamNumber, Convert.ToInt32(Tool2_Name[1])].ResultDisplay(cdyDisplay, Collection);
-            TempDistance[Glob.CamNumber, (int)num_DimensionToolNum.Value].InputXY(TempLines[Glob.CamNumber, Convert.ToInt32(Tool2_Name[1])].Average_PointX(), TempLines[Glob.CamNumber, Convert.ToInt32(Tool2_Name[1])].Average_PointY());
         }
+
         private void btn_Tool1Inspect_Click(object sender, EventArgs e)
         {
             //CogGraphicCollection Collection = new CogGraphicCollection();
@@ -1183,7 +1169,6 @@ namespace VISION
 
             TempCircles[Glob.CamNumber, Convert.ToInt32(Tool2_Name[1])].Run((CogImage8Grey)cdyDisplay.Image);
             TempCircles[Glob.CamNumber, Convert.ToInt32(Tool2_Name[1])].ResultDisplay(ref cdyDisplay);
-            TempDistance[Glob.CamNumber, (int)num_DimensionToolNum.Value].InputCircle(TempCircles[Glob.CamNumber, Convert.ToInt32(Tool2_Name[1])].GetCircle());
         }
         private void btn_DimensionTool_Inspection_Click(object sender, EventArgs e)
         {

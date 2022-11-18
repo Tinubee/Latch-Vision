@@ -168,6 +168,15 @@ namespace VISION.Cogs
 
         }
 
+        public double GetResultPointX(int num)
+        {
+            return Tool.Results[num].X;
+        }
+        public double GetResultPointY(int num)
+        {
+            return Tool.Results[num].Y;
+        }
+
         public Cognex.VisionPro.CogLineSegment Segment()
         {
             return Tool.Results.GetLineSegment();
@@ -286,6 +295,7 @@ namespace VISION.Cogs
                     break;
             }
         }
+
         public double Average_PointX()
         {
             double Result = 0;

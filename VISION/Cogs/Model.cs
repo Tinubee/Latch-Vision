@@ -193,9 +193,9 @@ namespace VISION.Cogs
                 Distances[cam, lop].Loadtool(path, lop);
                 DistanceEnable[cam, lop] = Modelcfg.ReadData("DISTANCE - " + lop.ToString(), "Enable") == "1" ? true : false;
                 if (Modelcfg.ReadData("DISTANCE - " + lop.ToString(), "Distance_UseTool1_Number") == "")
-                    Modelcfg.WriteData("DISTANCE - " + lop.ToString(), "Distance_UseTool1_Number", $"LINE + {lop.ToString()}");
+                    Modelcfg.WriteData("DISTANCE - " + lop.ToString(), "Distance_UseTool1_Number", $"LINE - {lop.ToString()}");
                 if (Modelcfg.ReadData("DISTANCE - " + lop.ToString(), "Distance_UseTool2_Number") == "")
-                    Modelcfg.WriteData("DISTANCE - " + lop.ToString(), "Distance_UseTool2_Number", $"LINE + {lop.ToString()}");
+                    Modelcfg.WriteData("DISTANCE - " + lop.ToString(), "Distance_UseTool2_Number", $"LINE - {lop.ToString()}");
                 if (Modelcfg.ReadData("DISTANCE - " + lop.ToString(), "Distance_CalibrationValue") == "")
                     Modelcfg.WriteData("DISTANCE - " + lop.ToString(), "Distance_CalibrationValue", "1");
                 if (Modelcfg.ReadData("DISTANCE - " + lop.ToString(), "Distance_LowValue") == "")
@@ -642,30 +642,64 @@ namespace VISION.Cogs
                         string[] splitTool1Name = Tool1_Name.Split('-');
                         string[] splitTool2Name = Tool2_Name.Split('-');
 
-                        //기준선 라인 툴 실행.
+                        //Datam 라인 툴 실행. 0번툴이 기준선이 된다.
+                        Lines[CamNumber, 0].Run(Image);
+                        Lines[CamNumber, 0].ResultDisplay(Display, Collection);
+
+                        //포인트 추출할 라인 툴 실행.
                         Lines[CamNumber, Convert.ToInt32(splitTool1Name[1])].Run(Image);
                         Lines[CamNumber, Convert.ToInt32(splitTool1Name[1])].ResultDisplay(Display, Collection);
-                        Distances[CamNumber, lop].InputLine(lop, Lines[CamNumber, Convert.ToInt32(splitTool1Name[1])].GetLine());
 
-                        //포인트 툴 실행.
-                        switch (splitTool2Name[0])
+                        Lines[CamNumber, Convert.ToInt32(splitTool2Name[1])].Run(Image);
+                        Lines[CamNumber, Convert.ToInt32(splitTool2Name[1])].ResultDisplay(Display, Collection);
+
+                        //추출한 라인의 각 포인트를 이용하여 기준선과 평행한 직선 만들기.
+                        int caliperCount = Lines[CamNumber, Convert.ToInt32(splitTool1Name[1])].CaliperNumber();
+                        CogCreateLineParallelTool[] ParallelLine = new CogCreateLineParallelTool[caliperCount];
+                        CogIntersectLineLineTool[] IntersectLineLine = new CogIntersectLineLineTool[caliperCount];
+                        double maxDistance = 0;
+                        int maxDistanceCaliperNumber = 0;
+                        CogDistancePointPointTool PPTool = new CogDistancePointPointTool();
+                        CogLineSegment segment;
+                        PPTool.InputImage = Image;
+                        for (int i = 0; i < caliperCount; i++)
                         {
-                            case "Line ":
-                                Lines[CamNumber, Convert.ToInt32(splitTool2Name[1])].Run(Image);
-                                Lines[CamNumber, Convert.ToInt32(splitTool2Name[1])].ResultDisplay(Display, Collection);
-                                Distances[CamNumber, lop].InputXY(Lines[CamNumber, Convert.ToInt32(splitTool2Name[1])].Average_PointX(), Lines[CamNumber, Convert.ToInt32(splitTool2Name[1])].Average_PointY());
-                                break;
-                            case "Caliper ":
-                                Calipers[CamNumber, Convert.ToInt32(splitTool2Name[1])].Run(Image);
-                                Calipers[CamNumber, Convert.ToInt32(splitTool2Name[1])].ResultAllDisplay(Collection);
-                                Distances[CamNumber, lop].InputXY(Calipers[CamNumber, Convert.ToInt32(splitTool2Name[1])].Result_Corner_X(), Calipers[CamNumber, Convert.ToInt32(splitTool2Name[1])].Result_Corner_Y());
-                                break;
-                            case "Circle ":
-                                Circles[CamNumber, Convert.ToInt32(splitTool2Name[1])].Run(Image);
-                                Circles[CamNumber, Convert.ToInt32(splitTool2Name[1])].ResultAllDisplay(Collection);
-                                Distances[CamNumber, lop].InputCircle(Circles[CamNumber, Convert.ToInt32(splitTool2Name[1])].GetCircle());
-                                break;
+                            ParallelLine[i] = new CogCreateLineParallelTool();
+                            IntersectLineLine[i] = new CogIntersectLineLineTool();
+                            ParallelLine[i].InputImage = Image;
+                            IntersectLineLine[i].InputImage = Image;
+
+                            ParallelLine[i].X = Lines[CamNumber, Convert.ToInt32(splitTool1Name[1])].GetResultPointX(i);
+                            ParallelLine[i].Y = Lines[CamNumber, Convert.ToInt32(splitTool1Name[1])].GetResultPointY(i);
+                            ParallelLine[i].Line = Lines[CamNumber, 0].GetLine();
+                            ParallelLine[i].Run();
+                            Collection.Add(ParallelLine[i].GetOutputLine());
+                            // 평행하게 만든직선과 교차점 구하기.
+                            IntersectLineLine[i].LineA = Lines[CamNumber, Convert.ToInt32(splitTool2Name[1])].GetLine();
+                            IntersectLineLine[i].LineB = ParallelLine[i].GetOutputLine();
+                            IntersectLineLine[i].Run();
+
+                            //교차점과 각 포인트마다 거리구하기.
+                            PPTool.StartX = Lines[CamNumber, Convert.ToInt32(splitTool1Name[1])].GetResultPointX(i);
+                            PPTool.StartY = Lines[CamNumber, Convert.ToInt32(splitTool1Name[1])].GetResultPointY(i);
+                            PPTool.EndX = IntersectLineLine[i].X;
+                            PPTool.EndY = IntersectLineLine[i].Y;
+                            PPTool.Run();
+
+                            segment = (CogLineSegment)PPTool.CreateLastRunRecord().SubRecords["InputImage"].SubRecords["Arrow"].Content;
+                            Display.StaticGraphics.Add(segment, "");
+
+                            //최대값 체크
+                            if(maxDistance < PPTool.Distance)
+                            {
+                                maxDistance = PPTool.Distance;
+                                maxDistanceCaliperNumber = i;
+                            }
                         }
+
+                        //최대값 구한 값 넣기.
+                        Distances[CamNumber, lop].InputStartXY(Lines[CamNumber, Convert.ToInt32(splitTool1Name[1])].GetResultPointX(maxDistanceCaliperNumber), Lines[CamNumber, Convert.ToInt32(splitTool1Name[1])].GetResultPointY(maxDistanceCaliperNumber));
+                        Distances[CamNumber, lop].InputEndXY(IntersectLineLine[maxDistanceCaliperNumber].X, IntersectLineLine[maxDistanceCaliperNumber].Y);
 
                         Distances[CamNumber, lop].Run(lop, Image);
                         ResultString[lop] = "OK";

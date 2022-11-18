@@ -9,35 +9,27 @@ namespace VISION.Cogs
 {
     public class Distance
     {
-        private Cognex.VisionPro.Dimensioning.CogDistancePointLineTool Tool;
-        private Cognex.VisionPro.Dimensioning.CogDistanceLineCircleTool Tool2;
+        private Cognex.VisionPro.Dimensioning.CogDistancePointPointTool Tool;
+
         public Distance(int Toolnumber)
         {
-            Tool = new Cognex.VisionPro.Dimensioning.CogDistancePointLineTool();
-            Tool2 = new Cognex.VisionPro.Dimensioning.CogDistanceLineCircleTool();
-
-            if (Toolnumber == 2)
-            {
-                Tool2.Name = "Distance - " + Toolnumber.ToString();
-            }
-            else
-            {
-                Tool.Name = "Distance - " + Toolnumber.ToString();
-            }
+            Tool = new Cognex.VisionPro.Dimensioning.CogDistancePointPointTool();
+            Tool.Name = "Distance - " + Toolnumber.ToString();
         }
+
 
         public string ToolName(int toolnum)
         {
-            if (toolnum == 2)
-            {
-                return Tool2.Name;
-            }
-            else
-                return Tool.Name;
+            return Tool.Name;
         }
 
         private bool NewTool()
         {
+            Tool.StartX = 10;
+            Tool.StartY = 10;
+            Tool.EndX = 70;
+            Tool.EndY = 40;
+
             return true;
         }
 
@@ -55,11 +47,7 @@ namespace VISION.Cogs
                 NewTool();
                 return true;
             }
-            if (num == 2)
-            {
-                Savepath = Savepath + "\\" + Tool2.Name + ".vpp";
-            }
-            else
+           
                 Savepath = Savepath + "\\" + Tool.Name + ".vpp";
 
             if (System.IO.File.Exists(Savepath) == false)
@@ -68,12 +56,7 @@ namespace VISION.Cogs
                 return false;
             }
 
-            if (num == 2)
-            {
-                Tool2 = (Cognex.VisionPro.Dimensioning.CogDistanceLineCircleTool)CogSerializer.LoadObjectFromFile(Savepath);
-            }
-            else
-                Tool = (Cognex.VisionPro.Dimensioning.CogDistancePointLineTool)CogSerializer.LoadObjectFromFile(Savepath);
+            Tool = (Cognex.VisionPro.Dimensioning.CogDistancePointPointTool)CogSerializer.LoadObjectFromFile(Savepath);
 
             return true;
         }
@@ -91,16 +74,9 @@ namespace VISION.Cogs
             {
                 return false;
             }
-            if (num == 2)
-            {
-                Savepath = Savepath + "\\" + Tool2.Name + ".vpp";
-                CogSerializer.SaveObjectToFile(Tool2, Savepath);
-            }
-            else
-            {
-                Savepath = Savepath + "\\" + Tool.Name + ".vpp";
-                CogSerializer.SaveObjectToFile(Tool, Savepath);
-            }
+
+            Savepath = Savepath + "\\" + Tool.Name + ".vpp";
+            CogSerializer.SaveObjectToFile(Tool, Savepath);
 
             return true;
         }
@@ -116,12 +92,8 @@ namespace VISION.Cogs
             {
                 return false;
             }
-            if (toolnum == 2)
-            {
-                Tool2.InputImage = image;
-            }
-            else
-                Tool.InputImage = image;
+
+            Tool.InputImage = image;
             return true;
         }
         public void ResultDisplay(int toolnum, Cognex.VisionPro.Display.CogDisplay display, CogGraphicCollection Collection)
@@ -129,15 +101,7 @@ namespace VISION.Cogs
             CogLineSegment segment;
             try
             {
-                if (toolnum == 2)
-                {
-                    segment = (CogLineSegment)Tool2.CreateLastRunRecord().SubRecords["InputImage"].SubRecords["Arrow"].Content;
-                }
-                else
-                {
-                    segment = (CogLineSegment)Tool.CreateLastRunRecord().SubRecords["InputImage"].SubRecords["Arrow"].Content;
-                }
-
+                segment = (CogLineSegment)Tool.CreateLastRunRecord().SubRecords["InputImage"].SubRecords["Arrow"].Content;
                 Collection.Add(segment);
                 display.StaticGraphics.AddList(Collection, "");
             }
@@ -150,18 +114,13 @@ namespace VISION.Cogs
         {
             try
             {
-                if (toolnum == 2)
-                {
-                    return Tool2.Distance;
-                }
-                else
-                    return Tool.Distance;
+                return Tool.Distance;
             }
-            catch(Exception ee)
+            catch (Exception ee)
             {
                 return 0;
             }
-        
+
         }
         public bool Run(int toolnum, CogImage8Grey image)
         {
@@ -169,94 +128,59 @@ namespace VISION.Cogs
             {
                 return false;
             }
-            if (toolnum == 2)
-            {
-                Tool2.Run();
-            }
-            else
-                Tool.Run();
 
-            if (Tool.Line == null)
-            {
+            Tool.Run();
+
+            return true;
+        }
+
+        public bool InputStartXY(double StX, double StY)
+        {
+            if (StX == 0 || StY == 0)
                 return false;
-            }
+
+            Tool.StartX = StX;
+            Tool.StartY = StY;
 
             return true;
         }
 
-        public bool InputLine(int toolnum, CogLine Line)
+        public bool InputEndXY(double EndX, double EndY)
         {
-            if (toolnum == 2)
-            {
-                Tool2.Line = Line;
-            }
-            else
-                Tool.Line = Line;
+            if (EndX == 0 || EndY == 0)
+                return false;
+
+            Tool.EndX = EndX;
+            Tool.EndY = EndY;
+
             return true;
         }
-        public bool InputCircle(CogCircle Circle)
-        {
-            Tool2.InputCircle = Circle;
-            return true;
-        }
-        public bool InputXY(double PointX, double PointY)
-        {
-            Tool.X = PointX;
-            Tool.Y = PointY;
-            return true;
-        }
+
         public double GetX(int toolnum)
         {
-            if (toolnum == 2)
-            {
-                return Tool2.LineX;
-            }
-            else
-                return Tool.X;
+            return Tool.StartX;
         }
         public double GetY(int toolnum)
         {
-            if (toolnum == 2)
-            {
-                return Tool2.LineY;
-            }
-            else
-                return Tool.Y;
-
+            return Tool.StartY;
         }
         /// <summary>
         /// 검사 툴 전체 셋업 화면을 화면에 표시
         /// </summary>
         public void ToolSetup(int toolnum)
         {
-            if (toolnum == 2)
-            {
-                System.Windows.Forms.Form Window = new System.Windows.Forms.Form();
-                Cognex.VisionPro.Dimensioning.CogDistanceLineCircleEditV2 Edit = new Cognex.VisionPro.Dimensioning.CogDistanceLineCircleEditV2();
+            System.Windows.Forms.Form Window = new System.Windows.Forms.Form();
+            Cognex.VisionPro.Dimensioning.CogDistancePointPointEditV2 Edit = new Cognex.VisionPro.Dimensioning.CogDistancePointPointEditV2();
 
-                Edit.Dock = System.Windows.Forms.DockStyle.Fill; // 화면 채움
-                Edit.Subject = Tool2; // 에디트에 툴 정보 입력.
-                Window.Controls.Add(Edit); // 폼에 에디트 추가.
+            Edit.Dock = System.Windows.Forms.DockStyle.Fill; // 화면 채움
+            Edit.Subject = Tool; // 에디트에 툴 정보 입력.
+            Window.Controls.Add(Edit); // 폼에 에디트 추가.
 
-                Window.Width = 800;
-                Window.Height = 600;
+            Window.Width = 800;
+            Window.Height = 600;
 
-                Window.Show(); // 폼 실행
-            }
-            else
-            {
-                System.Windows.Forms.Form Window = new System.Windows.Forms.Form();
-                Cognex.VisionPro.Dimensioning.CogDistancePointLineEditV2 Edit = new Cognex.VisionPro.Dimensioning.CogDistancePointLineEditV2();
+            Window.Show(); // 폼 실행
 
-                Edit.Dock = System.Windows.Forms.DockStyle.Fill; // 화면 채움
-                Edit.Subject = Tool; // 에디트에 툴 정보 입력.
-                Window.Controls.Add(Edit); // 폼에 에디트 추가.
-
-                Window.Width = 800;
-                Window.Height = 600;
-
-                Window.Show(); // 폼 실행
-            }
         }
     }
 }
