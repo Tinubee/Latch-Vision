@@ -1195,8 +1195,8 @@
             this.button11.Name = "button11";
             this.button11.Size = new System.Drawing.Size(231, 87);
             this.button11.TabIndex = 44;
-            this.button11.Tag = "9";
-            this.button11.Text = "9 OFF";
+            this.button11.Tag = "8";
+            this.button11.Text = "8 OFF";
             this.button11.UseVisualStyleBackColor = true;
             this.button11.Click += new System.EventHandler(this.OUTPUTOFF_Click);
             // 
@@ -1234,8 +1234,8 @@
             this.button9.Name = "button9";
             this.button9.Size = new System.Drawing.Size(229, 87);
             this.button9.TabIndex = 36;
-            this.button9.Tag = "9";
-            this.button9.Text = "9 ON";
+            this.button9.Tag = "8";
+            this.button9.Text = "8 ON";
             this.button9.UseVisualStyleBackColor = true;
             this.button9.Click += new System.EventHandler(this.OUTPUT_Click);
             // 
@@ -1267,8 +1267,8 @@
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(231, 87);
             this.button2.TabIndex = 43;
-            this.button2.Tag = "8";
-            this.button2.Text = "8 OFF";
+            this.button2.Tag = "7";
+            this.button2.Text = "7 OFF";
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.OUTPUTOFF_Click);
             // 
@@ -1306,8 +1306,8 @@
             this.button8.Name = "button8";
             this.button8.Size = new System.Drawing.Size(229, 87);
             this.button8.TabIndex = 35;
-            this.button8.Tag = "8";
-            this.button8.Text = "8 ON";
+            this.button8.Tag = "7";
+            this.button8.Text = "7 ON";
             this.button8.UseVisualStyleBackColor = true;
             this.button8.Click += new System.EventHandler(this.OUTPUT_Click);
             // 
@@ -2058,8 +2058,8 @@
             this.ClientSize = new System.Drawing.Size(1920, 1080);
             this.Controls.Add(this.tableLayoutPanel31);
             this.Controls.Add(this.tlpUnder);
-            this.Controls.Add(this.Main_TabControl);
             this.Controls.Add(this.tlpTopSide);
+            this.Controls.Add(this.Main_TabControl);
             this.ForeColor = System.Drawing.Color.Black;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.KeyPreview = true;

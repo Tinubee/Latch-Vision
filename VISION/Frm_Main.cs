@@ -202,7 +202,7 @@ namespace VISION
                     ExposureValue[i] = Convert.ToInt32(CamSet.ReadData($"Camera{i}", "Exposure"));
                     GainValue[i] = Convert.ToInt32(CamSet.ReadData($"Camera{i}", "Gain"));
                 }
-                for (int i = 0; i < deviceList[0].Count; i++) //decivelist로 변경 - 20210803 김형민
+                for (int i = 0; i < camcount; i++) //decivelist로 변경 - 20210803 김형민
                 {
                     // 20201216 김형민 추가 - 카메라 셋팅 불러오기.
                     Thread.Sleep(200);
@@ -216,11 +216,11 @@ namespace VISION
                     bGrabberValid[i] = true;
                 }
             }
-            catch(Exception ee)
+            catch (Exception ee)
             {
                 log.AddLogMessage(LogType.Error, 0, ee.Message);
             }
-         
+
         }
 
         private void Initialize_LightControl()
@@ -487,7 +487,7 @@ namespace VISION
                                     mDataStream[i].RegisterNewBufferEvent(BGAPI2.Events.EventMode.EVENT_HANDLER);
                                     mDataStream[i].NewBufferEvent += new BGAPI2.Events.DataStreamEventControl.NewBufferEventHandler(mDataStream_NewBufferEvent3);
                                     break;
-                               
+
                             }
                         }
                     }
@@ -638,7 +638,7 @@ namespace VISION
                 cm.info(ex.Message);
             }
         }
-        
+
         protected void ResetGrabber(int camnumber)
         {
             try
@@ -1266,8 +1266,8 @@ namespace VISION
                 cm.info($"Camera 3 is not connected : {ee.Message}");
             }
         }
-       
-             
+
+
         public bool StartLive1(int camnumber)
         {
             try
@@ -1345,7 +1345,7 @@ namespace VISION
                 OK_Label = new Label[3] { lb_CAM1_OK, lb_CAM2_OK, lb_CAM3_OK };
                 NG_Label = new Label[3] { lb_CAM1_NG, lb_CAM2_NG, lb_CAM3_NG };
                 TOTAL_Label = new Label[3] { lb_CAM1_TOTAL, lb_CAM2_TOTAL, lb_CAM3_TOTAL };
-                NGRATE_Label = new Label[3] { lb_CAM1_NGRATE, lb_CAM2_NGRATE, lb_CAM3_NGRATE};
+                NGRATE_Label = new Label[3] { lb_CAM1_NGRATE, lb_CAM2_NGRATE, lb_CAM3_NGRATE };
 
                 INIControl Modellist = new INIControl(Glob.MODELLIST); ;
                 INIControl CFGFILE = new INIControl(Glob.CONFIGFILE); ;
@@ -1523,45 +1523,77 @@ namespace VISION
                 {
                     if (gbool_di[i] != re_gbool_di[i] && gbool_di[i] == true)
                     {
+                        log.AddLogMessage(LogType.Infomation, 0, i.ToString());
                         switch (i)
                         {
-                            case 8: // LINE #1 Vision Trigger 신호
+                            case 7:
                                 OutPutSignal_Off(1);
                                 OutPutSignal_Off(2);
-                                OutPutSignal_Off(3);
-                                OutPutSignal_Off(4);
-                                OutPutSignal_Off(5);
-                                OutPutSignal_Off(6);
                                 log.AddLogMessage(LogType.Infomation, 0, "Line #1 Vision Trigger");
-                                if (InspectFlag[0] == false && InspectFlag[1] == false && InspectFlag[2] == false)
+                                if (InspectFlag[0] == false)
                                 {
-
                                     cdyDisplay.Image = null;
                                     cdyDisplay.InteractiveGraphics.Clear();
                                     cdyDisplay.StaticGraphics.Clear();
-                                    cdyDisplay2.Image = null;
-                                    cdyDisplay2.InteractiveGraphics.Clear();
-                                    cdyDisplay2.StaticGraphics.Clear();
-                                    cdyDisplay3.Image = null;
-                                    cdyDisplay3.InteractiveGraphics.Clear();
-                                    cdyDisplay3.StaticGraphics.Clear();
                                     BeginInvoke((Action)delegate
                                     {
                                         lb_Cam1_Result.Text = "Result";
                                         lb_Cam1_Result.BackColor = SystemColors.Control;
-                                        lb_Cam2_Result.Text = "Result";
-                                        lb_Cam2_Result.BackColor = SystemColors.Control;
-                                        lb_Cam3_Result.Text = "Result";
-                                        lb_Cam3_Result.BackColor = SystemColors.Control;
                                     });
 
                                     snap1 = new Thread(new ThreadStart(SnapShot1));
                                     snap1.Priority = ThreadPriority.Highest;
                                     snap1.Start();
+                                }
+                                else
+                                {
+                                    OutPutSignal_Off(1);
+                                    OutPutSignal_Off(2);
+                                    InspectFlag[0] = false;
+                                    log.AddLogMessage(LogType.Infomation, 0, "LINE #1 검사 결과 초기화");
+                                }
+                                break;
+                            case 10:
+                                OutPutSignal_Off(4);
+                                OutPutSignal_Off(5);
+                                log.AddLogMessage(LogType.Infomation, 0, "Line #2 Vision Trigger");
+                                if (InspectFlag[1] == false)
+                                {
+                                    cdyDisplay2.Image = null;
+                                    cdyDisplay2.InteractiveGraphics.Clear();
+                                    cdyDisplay2.StaticGraphics.Clear();
+                                    BeginInvoke((Action)delegate
+                                    {
+                                        lb_Cam2_Result.Text = "Result";
+                                        lb_Cam2_Result.BackColor = SystemColors.Control;
+                                    });
 
                                     snap2 = new Thread(new ThreadStart(SnapShot2));
                                     snap2.Priority = ThreadPriority.Highest;
                                     snap2.Start();
+                                }
+                                else
+                                {
+                                    OutPutSignal_Off(4);
+                                    OutPutSignal_Off(5);
+                                    InspectFlag[1] = false;
+                                    log.AddLogMessage(LogType.Infomation, 0, "LINE #2 검사 결과 초기화");
+                                }
+                                break;
+                            case 13:
+                                OutPutSignal_Off(7);
+                                OutPutSignal_Off(8);
+                                log.AddLogMessage(LogType.Infomation, 0, "Line #3 Vision Trigger");
+                                if (InspectFlag[2] == false)
+                                {
+                                    cdyDisplay3.Image = null;
+                                    cdyDisplay3.InteractiveGraphics.Clear();
+                                    cdyDisplay3.StaticGraphics.Clear();
+                                    BeginInvoke((Action)delegate
+                                    {
+                                        lb_Cam3_Result.Text = "Result";
+                                        lb_Cam3_Result.BackColor = SystemColors.Control;
+                                    });
 
                                     snap3 = new Thread(new ThreadStart(SnapShot3));
                                     snap3.Priority = ThreadPriority.Highest;
@@ -1569,30 +1601,68 @@ namespace VISION
                                 }
                                 else
                                 {
-                                    OutPutSignal_Off(1);
-                                    OutPutSignal_Off(2);
-                                    OutPutSignal_Off(3);
-                                    OutPutSignal_Off(4);
-                                    OutPutSignal_Off(5);
-                                    OutPutSignal_Off(6);
-                                    InspectFlag[0] = false;
-                                    InspectFlag[1] = false;
+                                    OutPutSignal_Off(7);
+                                    OutPutSignal_Off(8);
                                     InspectFlag[2] = false;
-                                    log.AddLogMessage(LogType.Infomation, 0, "LINE #1 검사 결과 초기화");
+                                    log.AddLogMessage(LogType.Infomation, 0, "LINE #3 검사 결과 초기화");
                                 }
                                 break;
-                            case 9: //LINE #1 결과 체크 신호
-                                log.AddLogMessage(LogType.Infomation, 0, "Line #1 Result Check");
-                                //if (InspectFlag[0] == false && InspectFlag[1] == false && InspectFlag[2] == false)
-                                //{
-                                OutPutSignal_Off(1);
-                                OutPutSignal_Off(2);
-                                OutPutSignal_Off(3);
-                                OutPutSignal_Off(4);
-                                OutPutSignal_Off(5);
-                                OutPutSignal_Off(6);
-                                //}
-                                break;                           
+                                //case 8: // LINE #1 Vision Trigger 신호
+                                //    if (InspectFlag[0] == false && InspectFlag[1] == false && InspectFlag[2] == false)
+                                //    {
+
+
+                                //        cdyDisplay2.Image = null;
+                                //        cdyDisplay2.InteractiveGraphics.Clear();
+                                //        cdyDisplay2.StaticGraphics.Clear();
+                                //        cdyDisplay3.Image = null;
+                                //        cdyDisplay3.InteractiveGraphics.Clear();
+                                //        cdyDisplay3.StaticGraphics.Clear();
+                                //        BeginInvoke((Action)delegate
+                                //        {
+                                //            lb_Cam1_Result.Text = "Result";
+                                //            lb_Cam1_Result.BackColor = SystemColors.Control;
+                                //            lb_Cam2_Result.Text = "Result";
+                                //            lb_Cam2_Result.BackColor = SystemColors.Control;
+                                //            lb_Cam3_Result.Text = "Result";
+                                //            lb_Cam3_Result.BackColor = SystemColors.Control;
+                                //        });
+
+
+
+                                //        snap2 = new Thread(new ThreadStart(SnapShot2));
+                                //        snap2.Priority = ThreadPriority.Highest;
+                                //        snap2.Start();
+
+                                //        snap3 = new Thread(new ThreadStart(SnapShot3));
+                                //        snap3.Priority = ThreadPriority.Highest;
+                                //        snap3.Start();
+                                //    }
+                                //    else
+                                //    {
+
+                                //        OutPutSignal_Off(3);
+                                //        OutPutSignal_Off(4);
+                                //        OutPutSignal_Off(5);
+                                //        OutPutSignal_Off(6);
+
+                                //        InspectFlag[1] = false;
+                                //        InspectFlag[2] = false;
+
+                                //    }
+                                //    break;
+                                //case 9: //LINE #1 결과 체크 신호
+                                //    log.AddLogMessage(LogType.Infomation, 0, "Line #1 Result Check");
+                                //    //if (InspectFlag[0] == false && InspectFlag[1] == false && InspectFlag[2] == false)
+                                //    //{
+                                //    OutPutSignal_Off(1);
+                                //    OutPutSignal_Off(2);
+                                //    OutPutSignal_Off(3);
+                                //    OutPutSignal_Off(4);
+                                //    OutPutSignal_Off(5);
+                                //    OutPutSignal_Off(6);
+                                //    //}
+                                //    break;                           
                         }
                     }
                 }
@@ -1647,16 +1717,22 @@ namespace VISION
             btn_SystemSetup.Enabled = false;
             btn_Stop.Enabled = true;
             OutPutSignal_On(0); //LINE #1 VISION READY ON 
-            OutPutSignal_On(8); //LINE #2 VISION READY ON 
+            OutPutSignal_On(3); //LINE #2 VISION READY ON 
+            OutPutSignal_On(6); //LINE #3 VISION READY ON 
             CognexModelLoad();
-            for (int num = 1; num < 7; num++)
+            for (int num = 1; num < 3; num++)
             {
                 //LINE #1 검사 결과 초기화
                 OutPutSignal_Off(num);
             }
-            for (int num = 9; num < 15; num++)
+            for (int num = 4; num < 6; num++)
             {
                 //LINE #2 검사 결과 초기화
+                OutPutSignal_Off(num);
+            }
+            for (int num = 7; num < 9; num++)
+            {
+                //LINE #3 검사 결과 초기화
                 OutPutSignal_Off(num);
             }
             if (bk_IO.IsBusy == false) //I/O 백그라운드가 돌고있지 않으면.
@@ -2564,7 +2640,8 @@ namespace VISION
         private void btn_Stop_Click(object sender, EventArgs e)
         {
             OutPutSignal_Off(0);
-            OutPutSignal_Off(8);
+            OutPutSignal_Off(3);
+            OutPutSignal_Off(6);
             btn_Stop.Enabled = false;
             btn_ToolSetUp.Enabled = true;
             btn_Model.Enabled = true;
@@ -2634,7 +2711,7 @@ namespace VISION
 
             }
         }
-       
+
         private void Frm_Main_Paint(object sender, PaintEventArgs e)
         {
             if (frm_loading != null)
